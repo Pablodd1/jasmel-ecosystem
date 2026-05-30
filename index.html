@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jasmel Acosta — AI Ecosystem</title>
+    <title>Jasmel Acosta — AI Ecosystem & Robotics</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -14,6 +14,7 @@
         :root {
             --gold: #D4AF37;
             --gold-light: #F4E4BC;
+            --gold-bright: #FFD700;
             --gold-dark: #AA8C2C;
             --gold-dim: rgba(212, 175, 55, 0.15);
             --black: #0A0A0A;
@@ -101,7 +102,7 @@
             font-size: clamp(2.5rem, 5vw, 6rem);
             font-weight: 400;
             letter-spacing: -0.02em;
-            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dark) 100%);
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-bright) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -141,7 +142,6 @@
             line-height: 1.8;
             max-width: 600px;
         }
-
         .section-body strong { color: var(--gold-light); font-weight: 500; }
 
         /* Status Tags */
@@ -151,7 +151,6 @@
             margin-bottom: 2rem;
             flex-wrap: wrap;
         }
-
         .status-tag {
             display: inline-block;
             padding: 0.4rem 1rem;
@@ -163,7 +162,8 @@
         .tag-ready { border-color: #22c55e; color: #22c55e; }
         .tag-funding { border-color: var(--gold); color: var(--gold); }
         .tag-active { border-color: #3b82f6; color: #3b82f6; }
-        .tag-sell { border-color: #f59e0b; color: #f59e0b; }
+        .tag-soon { border-color: #f59e0b; color: #f59e0b; }
+        .tag-partner { border-color: #ec4899; color: #ec4899; }
 
         /* Feature Grid */
         .feature-grid {
@@ -309,7 +309,7 @@
             position: fixed;
             bottom: 0; left: 0;
             height: 2px;
-            background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light));
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-bright), var(--gold-light));
             z-index: 100;
             width: 0%;
         }
@@ -342,9 +342,7 @@
             0%, 100% { opacity: 0.3; transform: scaleX(0.5); }
             50% { opacity: 1; transform: scaleX(1); }
         }
-        @keyframes fadeOut {
-            to { opacity: 0; pointer-events: none; }
-        }
+        @keyframes fadeOut { to { opacity: 0; pointer-events: none; } }
 
         /* Grid BG */
         .grid-bg {
@@ -399,32 +397,18 @@
             top: 0; left: 0;
             height: 100%;
             width: 0%;
-            background: var(--gold);
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-bright));
             animation: loadProgress 2s ease forwards;
         }
         @keyframes loadProgress { to { width: 100%; } }
 
-        /* Mobile */
-        @media (max-width: 768px) {
-            html, body { overflow-y: auto; overflow-x: hidden; cursor: auto; }
-            .horizontal-wrapper { flex-direction: column; width: 100%; height: auto; }
-            .panel { width: 100%; height: auto; min-height: 100vh; padding: 4rem 2rem; }
-            .two-col { grid-template-columns: 1fr; gap: 2rem; }
-            .feature-grid { grid-template-columns: 1fr; }
-            .card-grid { grid-template-columns: 1fr; }
-            .nav-dots, .cursor, .cursor-follower { display: none; }
-            .scroll-hint { display: none; }
-        }
-
-        /* Revenue / Metric display */
+        /* Metrics */
         .metric-row {
             display: flex;
             gap: 2rem;
             margin-top: 1.5rem;
         }
-        .metric {
-            text-align: left;
-        }
+        .metric { text-align: left; }
         .metric-value {
             font-family: 'Playfair Display', serif;
             font-size: clamp(1.5rem, 3vw, 2.5rem);
@@ -439,7 +423,7 @@
             margin-top: 0.3rem;
         }
 
-        /* Contact links */
+        /* Contact */
         .contact-links {
             display: flex;
             flex-direction: column;
@@ -464,6 +448,37 @@
             justify-content: center;
             font-size: 1rem;
             color: var(--gold);
+        }
+
+        /* Partnership banner */
+        .partner-banner {
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 2rem;
+            margin-top: 2rem;
+            background: rgba(212, 175, 55, 0.03);
+        }
+        .partner-banner h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: var(--gold);
+            margin-bottom: 0.8rem;
+        }
+        .partner-banner p {
+            font-size: 0.85rem;
+            color: var(--gray);
+            line-height: 1.7;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            html, body { overflow-y: auto; overflow-x: hidden; cursor: auto; }
+            .horizontal-wrapper { flex-direction: column; width: 100%; height: auto; }
+            .panel { width: 100%; height: auto; min-height: 100vh; padding: 4rem 2rem; }
+            .two-col { grid-template-columns: 1fr; gap: 2rem; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .card-grid { grid-template-columns: 1fr; }
+            .nav-dots, .cursor, .cursor-follower { display: none; }
+            .scroll-hint { display: none; }
         }
     </style>
 </head>
@@ -492,38 +507,44 @@
     <div class="scroll-line"></div>
 </div>
 
-<!-- CONTENT — 10 PANELS -->
+<!-- CONTENT — 14 PANELS -->
 <div class="horizontal-wrapper" id="horizontalWrapper">
 
-    <!-- PANEL 1: HERO — AI ECOSYSTEM -->
+    <!-- PANEL 1: HERO -->
     <section class="panel" data-section="0">
         <div class="grid-bg"></div>
         <div class="panel-content">
-            <div class="section-label">AI Solutions Architect — Miami, FL</div>
+            <div class="section-label">AI Solutions Architect & Robotics Investor — Miami, FL</div>
             <h1 class="hero-title">Jasmel Acosta</h1>
             <p class="hero-subtitle">
-                I don't consult. I build. Nine platforms spanning healthcare AI, legal tech, 
-                business intelligence, 3D rendering, market forecasting, and automated marketing — 
-                all designed, coded, and shipped from Miami.
+                I build AI platforms, train robots, and forecast markets. 
+                Fourteen ventures spanning healthcare AI, legal tech, humanoid robotics, 
+                3D rendering, market simulation, automated marketing, luxury web design, 
+                and hybrid cloud infrastructure — all designed, coded, and shipped from Miami.
             </p>
             <div class="metric-row">
                 <div class="metric">
-                    <div class="metric-value">9</div>
+                    <div class="metric-value">14</div>
                     <div class="metric-label">Platforms</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">30%</div>
+                    <div class="metric-label">Robot Co.</div>
                 </div>
                 <div class="metric">
                     <div class="metric-value">5K</div>
                     <div class="metric-label">AI Personas</div>
                 </div>
                 <div class="metric">
-                    <div class="metric-value">$45K</div>
+                    <div class="metric-value">$45K+</div>
                     <div class="metric-label">Investor Ready</div>
                 </div>
             </div>
             <div class="cta-group">
                 <a href="#contact" class="btn btn-primary">Partner With Me</a>
                 <a href="#invest" class="btn">Invest</a>
-                <a href="#acquire" class="btn">Acquire a Platform</a>
+                <a href="#acquire" class="btn">Acquire</a>
+                <a href="#work" class="btn">Hire Me</a>
             </div>
         </div>
     </section>
@@ -537,8 +558,8 @@
                     <div class="section-label">Healthcare AI — Voice-Powered EHR</div>
                     <h2 class="section-title">AI Medical Scribe</h2>
                     <div class="status-row">
-                        <span class="status-tag tag-active">Active Development</span>
-                        <span class="status-tag tag-funding">$45K Investor Buyout</span>
+                        <span class="status-tag tag-active">Active</span>
+                        <span class="status-tag tag-funding">$45K Buyout</span>
                     </div>
                     <p class="section-body">
                         <strong>Voice-first EHR.</strong> No typing. No clicking. Just speak.
@@ -547,17 +568,17 @@
                     </p>
                     <ul class="feature-grid">
                         <li>3D muscle-skeletal assessment</li>
-                        <li>Homer exercises (billable to insurance)</li>
-                        <li>Blood pressure / heart rate / weight monitoring</li>
-                        <li>Fall detection via cheap Wi-Fi cameras</li>
+                        <li>Homer exercises (insurance billable)</li>
+                        <li>Blood pressure / heart rate / weight</li>
+                        <li>Fall detection via Wi-Fi cameras</li>
                         <li>Avatar exercise coach + form correction</li>
                         <li>X-ray & MRI reader + lab interpreter</li>
-                        <li>Red flagging: diseases, missing records, gaps</li>
-                        <li>All-scope practice: internal medicine, surgery, psych</li>
+                        <li>Red flagging: diseases, missing records</li>
+                        <li>All-scope: internal medicine, surgery, psych</li>
                     </ul>
                 </div>
                 <div>
-                    <div class="card-grid">
+                    <div class="card-grid" style="grid-template-columns: 1fr;">
                         <div class="card">
                             <h4>Voice Command</h4>
                             <p>Hands-free note creation. Speak naturally. AI structures, codes, and files.</p>
@@ -576,8 +597,57 @@
         </div>
     </section>
 
-    <!-- PANEL 3: 305BUSINESS.LLC -->
+    <!-- PANEL 3: HUMANOID ROBOTICS -->
     <section class="panel" data-section="2">
+        <div class="grid-bg"></div>
+        <div class="panel-content">
+            <div class="two-col">
+                <div>
+                    <div class="section-label">Humanoid Robotics — China to Miami Pipeline</div>
+                    <h2 class="section-title">Robotics Venture</h2>
+                    <div class="status-row">
+                        <span class="status-tag tag-soon">3 Months to Launch</span>
+                        <span class="status-tag tag-partner">30% Ownership</span>
+                    </div>
+                    <p class="section-body">
+                        <strong>Humanoid robots.</strong> Importing from China, training in Miami.
+                        I'm a 30% stakeholder in a company buying advanced humanoid robots 
+                        for the US market. These units will be trained using my AI technology 
+                        and deployed for healthcare assistance, hospitality, and labor.
+                    </p>
+                    <ul class="feature-grid">
+                        <li>Advanced humanoid robot import pipeline</li>
+                        <li>Custom AI training layer (my technology)</li>
+                        <li>Healthcare assistance deployment</li>
+                        <li>Hospitality & service industry bots</li>
+                        <li>Physical labor augmentation</li>
+                        <li>Miami-based operations & support</li>
+                        <li>Scalable training infrastructure</li>
+                        <li>Ready for market in 90 days</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="card-grid" style="grid-template-columns: 1fr;">
+                        <div class="card">
+                            <h4>The Pipeline</h4>
+                            <p>Sourcing advanced humanoid robots from Chinese manufacturers. Units selected for US compliance, durability, and AI compatibility.</p>
+                        </div>
+                        <div class="card">
+                            <h4>My Technology</h4>
+                            <p>Custom training layer built on my AI stack. Natural language, vision processing, task learning — robots that actually understand context.</p>
+                        </div>
+                        <div class="partner-banner">
+                            <h4>Looking For</h4>
+                            <p>Additional investors and strategic partners for the Miami deployment. Manufacturing relationships welcome. This is not a prototype — this is a market entry.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PANEL 4: 305BUSINESS.LLC -->
+    <section class="panel" data-section="3">
         <div class="grid-bg"></div>
         <div class="panel-content">
             <div class="two-col">
@@ -618,8 +688,8 @@
         </div>
     </section>
 
-    <!-- PANEL 4: AIDID — AI RENDERING -->
-    <section class="panel" data-section="3">
+    <!-- PANEL 5: AIDID — AI RENDERING -->
+    <section class="panel" data-section="4">
         <div class="grid-bg"></div>
         <div class="panel-content">
             <div class="two-col">
@@ -628,7 +698,7 @@
                     <h2 class="section-title">AIDid</h2>
                     <div class="status-row">
                         <span class="status-tag tag-active">Active</span>
-                        <span class="status-tag tag-sell">Sellable Product</span>
+                        <span class="status-tag tag-ready">Sellable Product</span>
                     </div>
                     <p class="section-body">
                         <strong>Render anything on anything.</strong> Take a photo. AI analyzes structure, lighting, perspective — then renders your product, paint, wrap, or design directly onto the real image.
@@ -638,7 +708,7 @@
                         <li>Interior & exterior paint</li>
                         <li>Furniture placement & styling</li>
                         <li>Clothing & bathing suit visualization</li>
-                        <li>Real-body proportions — no generic models</li>
+                        <li>Real-body proportions</li>
                         <li>ROI calculator: see before you buy</li>
                     </ul>
                 </div>
@@ -662,8 +732,8 @@
         </div>
     </section>
 
-    <!-- PANEL 5: ZERO-G FORECAST -->
-    <section class="panel" data-section="4">
+    <!-- PANEL 6: ZERO-G FORECAST -->
+    <section class="panel" data-section="5">
         <div class="grid-bg"></div>
         <div class="panel-content">
             <div class="two-col">
@@ -672,7 +742,7 @@
                     <h2 class="section-title">Zero-G Forecast</h2>
                     <div class="status-row">
                         <span class="status-tag tag-active">Operational</span>
-                        <span class="status-tag tag-sell">Sellable / Wrapping</span>
+                        <span class="status-tag tag-ready">Sellable / Wrapping</span>
                     </div>
                     <p class="section-body">
                         <strong>Simulate the future.</strong> 5,000 AI personas with demographics, behaviors, biases, and socioeconomic profiles. Run 6-month to 5-year forecasts across any industry, market, or investment.
@@ -710,8 +780,8 @@
         </div>
     </section>
 
-    <!-- PANEL 6: AI MARKETING CRM -->
-    <section class="panel" data-section="5">
+    <!-- PANEL 7: AI MARKETING CRM -->
+    <section class="panel" data-section="6">
         <div class="grid-bg"></div>
         <div class="panel-content">
             <div class="two-col">
@@ -749,8 +819,8 @@
         </div>
     </section>
 
-    <!-- PANEL 7: AI WEBSITE DESIGNER -->
-    <section class="panel" data-section="6">
+    <!-- PANEL 8: AI WEBSITE DESIGNER -->
+    <section class="panel" data-section="7">
         <div class="grid-bg"></div>
         <div class="panel-content">
             <div class="two-col">
@@ -792,8 +862,56 @@
         </div>
     </section>
 
-    <!-- PANEL 8: AI CONSULTING -->
-    <section class="panel" data-section="7">
+    <!-- PANEL 9: MATCH / DATING APP -->
+    <section class="panel" data-section="8">
+        <div class="grid-bg"></div>
+        <div class="panel-content">
+            <div class="two-col">
+                <div>
+                    <div class="section-label">AI Dating & Matching — Custom Avatars</div>
+                    <h2 class="section-title">Match AI</h2>
+                    <div class="status-row">
+                        <span class="status-tag tag-funding">$10K to Launch</span>
+                        <span class="status-tag tag-soon">Ready to Build</span>
+                    </div>
+                    <p class="section-body">
+                        <strong>Tinder and Bumble are one-size-fits-all.</strong> I'm building niche dating and matching platforms 
+                        with AI-generated male and female avatars on demand. Any style, any niche, any desire — 
+                        custom-created for your specific community or kink.
+                    </p>
+                    <ul class="feature-grid">
+                        <li>Custom avatar generation (male/female/nonbinary)</li>
+                        <li>Niche-specific matching algorithms</li>
+                        <li>Style and preference customization</li>
+                        <li>AI conversation starters</li>
+                        <li>Community-specific platforms</li>
+                        <li>Desire-based matching, not generic swipes</li>
+                        <li>Privacy-first design</li>
+                        <li>White-label for any community</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="card-grid" style="grid-template-columns: 1fr;">
+                        <div class="card">
+                            <h4>Not Another Tinder Clone</h4>
+                            <p>Generic dating apps fail because they try to serve everyone. Match AI builds for specific communities — from professional networks to lifestyle niches — with avatars and matching tuned to that exact audience.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Avatar on Demand</h4>
+                            <p>Users describe their ideal match style. AI generates the avatar. The platform learns preferences from interaction patterns, not just photos.</p>
+                        </div>
+                        <div class="partner-banner">
+                            <h4>Investment Opportunity</h4>
+                            <p>$10,000 gets this to MVP. Looking for a partner who understands community building and wants to own a niche dating platform. Not a clone — a category creator.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PANEL 10: AI CONSULTING -->
+    <section class="panel" data-section="9">
         <div class="grid-bg"></div>
         <div class="panel-content">
             <div class="two-col">
@@ -830,8 +948,104 @@
         </div>
     </section>
 
-    <!-- PANEL 9: ADDITIONAL VENTURES -->
-    <section class="panel" data-section="8">
+    <!-- PANEL 11: DATA & SIMULATION -->
+    <section class="panel" data-section="10">
+        <div class="grid-bg"></div>
+        <div class="panel-content">
+            <div class="two-col">
+                <div>
+                    <div class="section-label">National School Simulations — Color Analysis — Data Intelligence</div>
+                    <h2 class="section-title">Data & Simulation</h2>
+                    <div class="status-row">
+                        <span class="status-tag tag-active">Active</span>
+                        <span class="status-tag tag-ready">Sellable</span>
+                    </div>
+                    <p class="section-body">
+                        <strong>Simulation at scale.</strong> National school system modeling, color analysis 
+                        and perception science, and deep data intelligence for any organization. 
+                        I simulate entire populations to predict outcomes before they happen.
+                    </p>
+                    <ul class="feature-grid">
+                        <li>National education system simulations</li>
+                        <li>Student outcome prediction models</li>
+                        <li>Color psychology & perception analysis</li>
+                        <li>Brand color optimization</li>
+                        <li>Population behavior modeling</li>
+                        <li>Policy impact simulation</li>
+                        <li>Large-scale data extraction & cleaning</li>
+                        <li>Custom visualization dashboards</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="card-grid" style="grid-template-columns: 1fr;">
+                        <div class="card">
+                            <h4>School System Modeling</h4>
+                            <p>Simulate an entire country's education system. Test policy changes, resource allocation, curriculum shifts — see the outcome before implementing.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Color Intelligence</h4>
+                            <p>Color is not decoration — it's data. I analyze color perception, cultural associations, and psychological impact to optimize brands, products, and environments.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Promise Everything, Deliver More</h4>
+                            <p>I don't do small data. National-scale simulations, city-wide forecasting, industry-wide trend analysis. If you have the data, I have the model.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PANEL 12: INFRASTRUCTURE & CLOUD -->
+    <section class="panel" data-section="11">
+        <div class="grid-bg"></div>
+        <div class="panel-content">
+            <div class="two-col">
+                <div>
+                    <div class="section-label">Hybrid Cloud — Bare Metal — API Architecture</div>
+                    <h2 class="section-title">Infrastructure</h2>
+                    <div class="status-row">
+                        <span class="status-tag tag-active">Active</span>
+                        <span class="status-tag tag-ready">On Demand</span>
+                    </div>
+                    <p class="section-body">
+                        <strong>Hybrid cloud architecture.</strong> Bare metal servers standing by for when I need them.
+                        Otherwise, cloud and APIs handle the load. I don't over-provision — I architect 
+                        for scale without waste. Every platform runs on infrastructure I designed.
+                    </p>
+                    <ul class="feature-grid">
+                        <li>Hybrid cloud (bare metal + cloud)</li>
+                        <li>Servers on standby, spin up in minutes</li>
+                        <li>API-first architecture</li>
+                        <li>Multi-region deployment</li>
+                        <li>Auto-scaling based on demand</li>
+                        <li>Cost-optimized resource allocation</li>
+                        <li>Zero-downtime deployments</li>
+                        <li>Security-hardened by default</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="card-grid" style="grid-template-columns: 1fr;">
+                        <div class="card">
+                            <h4>The Philosophy</h4>
+                            <p>Most startups burn cash on AWS they don't need. I keep bare metal on standby — spin it up when a platform hits scale, spin it down when it doesn't. Cloud for experiments, metal for production.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Current Stack</h4>
+                            <p>Railway for rapid deployment. Vercel for edge delivery. Custom servers for heavy compute (forecasting, 3D rendering, robot training). APIs for everything else.</p>
+                        </div>
+                        <div class="partner-banner">
+                            <h4>Available For</h4>
+                            <p>Infrastructure audits, cost optimization, hybrid architecture design, and DevOps automation. If you're spending $5K/month on cloud and don't know why, I can fix that.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PANEL 13: ADDITIONAL VENTURES -->
+    <section class="panel" data-section="12">
         <div class="grid-bg"></div>
         <div class="panel-content">
             <div class="section-label">Additional Platforms & Opportunities</div>
@@ -864,25 +1078,30 @@
                 </div>
                 <div class="card">
                     <h4>CEDEXX</h4>
-                    <p>Health tech platform. $30K investment needed. 23 days to launch window. <strong style="color:var(--gold)">95% Ready</strong></p>
+                    <p>Health tech platform. $30K investment needed. 95% ready. <strong style="color:var(--gold)">95% Ready</strong></p>
                     <span class="status-tag tag-funding" style="margin-top: 1rem; display: inline-block;">$30K Needed</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- PANEL 10: CONTACT -->
-    <section class="panel" data-section="9">
+    <!-- PANEL 14: CONTACT / PARTNERSHIP -->
+    <section class="panel" data-section="13">
         <div class="grid-bg"></div>
         <div class="panel-content">
             <div class="two-col">
                 <div>
-                    <div class="section-label">Let's Build Something</div>
-                    <h2 class="section-title">Work With Me</h2>
+                    <div class="section-label">Let's Build the Future Together</div>
+                    <h2 class="section-title">Partner, Invest, or Acquire</h2>
                     <p class="section-body">
-                        I'm looking for partners, investors, and buyers for the platforms above.
+                        I'm looking for strategic partners, investors, and buyers for the platforms above.
                         Some are ready to launch. Some need funding. Some are ready to sell.
-                        If you see something that fits, let's talk.
+                        Some need a full-time operator — me.
+                    </p>
+                    <p class="section-body" style="margin-top: 1rem;">
+                        <strong>I want to be full-time dedicated to these opportunities.</strong>
+                        If you see something that fits, let's talk. I'm open to selling my position, 
+                        selling entire businesses, or partnering to scale what's working.
                     </p>
                     <div class="metric-row" style="margin-top: 2rem;">
                         <div class="metric">
@@ -892,6 +1111,10 @@
                         <div class="metric">
                             <div class="metric-value">Global</div>
                             <div class="metric-label">Reach</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">Full-Time</div>
+                            <div class="metric-label">Ready</div>
                         </div>
                     </div>
                 </div>
@@ -917,6 +1140,16 @@
                     <div class="cta-group" style="margin-top: 2rem;">
                         <a href="mailto:jasmelacosta@gmail.com?subject=Partnership%20Inquiry" class="btn btn-primary">Email Me</a>
                         <a href="https://t.me/JassCTO" class="btn">Telegram</a>
+                    </div>
+                    <div class="partner-banner" style="margin-top: 2rem;">
+                        <h4>What I'm Looking For</h4>
+                        <p>
+                            <strong>Partners:</strong> Co-founders for robotics, dating app, or healthcare AI.<br>
+                            <strong>Investors:</strong> $10K–$45K for immediate launches.<br>
+                            <strong>Buyers:</strong> Medical scribe, 305business, or Zero-G Forecast.<br>
+                            <strong>Employers:</strong> Full-time CTO/AI lead role. I bring 14 platforms.<br>
+                            <strong>Joint Ventures:</strong> Robot deployment, data contracts, school simulations.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -959,38 +1192,105 @@ document.querySelectorAll('a, .btn, .card, .nav-dot').forEach(el => {
 
 // === THREE.JS SCENES — ONE PER PANEL ===
 const scenes = [
-    // Scene 0: Floating Gold Particles (Hero)
+    // Scene 0: Golden Galaxy (Hero)
     (scene, camera, renderer) => {
         const geo = new THREE.BufferGeometry();
-        const count = 2000;
+        const count = 3000;
         const pos = new Float32Array(count * 3);
-        for (let i = 0; i < count * 3; i++) pos[i] = (Math.random() - 0.5) * 20;
+        const sizes = new Float32Array(count);
+        for (let i = 0; i < count; i++) {
+            pos[i*3] = (Math.random() - 0.5) * 25;
+            pos[i*3+1] = (Math.random() - 0.5) * 25;
+            pos[i*3+2] = (Math.random() - 0.5) * 25;
+            sizes[i] = Math.random() * 2;
+        }
         geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-        const mat = new THREE.PointsMaterial({ color: 0xD4AF37, size: 0.03, transparent: true, opacity: 0.6 });
+        geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+        const mat = new THREE.PointsMaterial({ 
+            color: 0xD4AF37, 
+            size: 0.04, 
+            transparent: true, 
+            opacity: 0.7,
+            sizeAttenuation: true
+        });
         const pts = new THREE.Points(geo, mat);
         scene.add(pts);
+        
+        // Add golden light
+        const light = new THREE.PointLight(0xFFD700, 0.5, 50);
+        light.position.set(0, 0, 10);
+        scene.add(light);
+        
         return (time) => {
-            pts.rotation.y = time * 0.05;
+            pts.rotation.y = time * 0.04;
             pts.rotation.x = time * 0.02;
+            mat.opacity = 0.5 + Math.sin(time * 0.5) * 0.2;
         };
     },
-    // Scene 1: Neural Network Lines (Medical)
+    // Scene 1: Neural Network (Medical)
     (scene, camera, renderer) => {
         const mat = new THREE.LineBasicMaterial({ color: 0xD4AF37, transparent: true, opacity: 0.3 });
         const group = new THREE.Group();
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 60; i++) {
             const geo = new THREE.BufferGeometry();
             const pts = [];
-            for (let j = 0; j < 20; j++) {
-                pts.push((Math.random()-0.5)*6, (Math.random()-0.5)*6, (Math.random()-0.5)*6);
+            for (let j = 0; j < 25; j++) {
+                pts.push((Math.random()-0.5)*7, (Math.random()-0.5)*7, (Math.random()-0.5)*7);
             }
             geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(pts), 3));
-            group.add(new THREE.Line(geo, mat));
+            const line = new THREE.Line(geo, mat);
+            group.add(line);
+        }
+        // Add nodes
+        const nodeGeo = new THREE.SphereGeometry(0.03, 8, 8);
+        const nodeMat = new THREE.MeshBasicMaterial({ color: 0xFFD700, transparent: true, opacity: 0.6 });
+        for (let i = 0; i < 30; i++) {
+            const node = new THREE.Mesh(nodeGeo, nodeMat);
+            node.position.set((Math.random()-0.5)*5, (Math.random()-0.5)*5, (Math.random()-0.5)*5);
+            group.add(node);
         }
         scene.add(group);
-        return (time) => { group.rotation.y = time * 0.03; group.rotation.z = time * 0.01; };
+        return (time) => { 
+            group.rotation.y = time * 0.03; 
+            group.rotation.z = time * 0.01;
+            group.children.forEach((child, i) => {
+                if (child.geometry && child.geometry.type === 'SphereGeometry') {
+                    child.scale.setScalar(1 + Math.sin(time * 2 + i) * 0.3);
+                }
+            });
+        };
     },
-    // Scene 2: Business Grid (305business)
+    // Scene 2: Robot Grid (Robotics)
+    (scene, camera, renderer) => {
+        const group = new THREE.Group();
+        const geo = new THREE.BoxGeometry(0.15, 0.3, 0.15);
+        const mat = new THREE.MeshBasicMaterial({ color: 0xD4AF37, transparent: true, opacity: 0.5, wireframe: true });
+        for (let x = -4; x <= 4; x++) {
+            for (let z = -4; z <= 4; z++) {
+                const mesh = new THREE.Mesh(geo, mat);
+                mesh.position.set(x * 1, Math.sin(x+z)*0.5, z * 1);
+                group.add(mesh);
+                // Add joint spheres
+                const jointGeo = new THREE.SphereGeometry(0.05, 8, 8);
+                const jointMat = new THREE.MeshBasicMaterial({ color: 0xFFD700, transparent: true, opacity: 0.4 });
+                const joint = new THREE.Mesh(jointGeo, jointMat);
+                joint.position.set(x * 1, Math.sin(x+z)*0.5 + 0.2, z * 1);
+                group.add(joint);
+            }
+        }
+        scene.add(group);
+        return (time) => {
+            group.children.forEach((child, i) => {
+                if (child.geometry.type === 'BoxGeometry') {
+                    child.position.y = Math.sin(time + i * 0.2) * 0.5;
+                    child.rotation.y = time * 0.3;
+                } else {
+                    child.position.y = Math.sin(time + i * 0.2) * 0.5 + 0.2;
+                }
+            });
+        };
+    },
+    // Scene 3: Business Grid (305business)
     (scene, camera, renderer) => {
         const group = new THREE.Group();
         const geo = new THREE.BoxGeometry(0.1, 0.1, 0.1);
@@ -1010,7 +1310,7 @@ const scenes = [
             });
         };
     },
-    // Scene 3: Morphing Sphere (AIDid)
+    // Scene 4: Morphing Sphere (AIDid)
     (scene, camera, renderer) => {
         const geo = new THREE.IcosahedronGeometry(1.5, 4);
         const mat = new THREE.MeshBasicMaterial({ color: 0xD4AF37, wireframe: true, transparent: true, opacity: 0.25 });
@@ -1028,7 +1328,7 @@ const scenes = [
             mesh.rotation.y = time * 0.1;
         };
     },
-    // Scene 4: Persona Rings (Zero-G)
+    // Scene 5: Persona Rings (Zero-G)
     (scene, camera, renderer) => {
         const group = new THREE.Group();
         for (let i = 0; i < 8; i++) {
@@ -1036,15 +1336,29 @@ const scenes = [
             const mat = new THREE.MeshBasicMaterial({ color: 0xD4AF37, transparent: true, opacity: 0.3 - i*0.03 });
             group.add(new THREE.Mesh(geo, mat));
         }
+        // Add persona dots
+        const dotGeo = new THREE.SphereGeometry(0.04, 6, 6);
+        const dotMat = new THREE.MeshBasicMaterial({ color: 0xFFD700, transparent: true, opacity: 0.6 });
+        for (let i = 0; i < 50; i++) {
+            const dot = new THREE.Mesh(dotGeo, dotMat);
+            const angle = Math.random() * Math.PI * 2;
+            const radius = 1 + Math.random() * 3;
+            dot.position.set(Math.cos(angle)*radius, Math.sin(angle)*radius, (Math.random()-0.5)*2);
+            group.add(dot);
+        }
         scene.add(group);
         return (time) => {
-            group.children.forEach((ring, i) => {
-                ring.rotation.x = time * (0.05 + i * 0.01);
-                ring.rotation.y = time * (0.03 + i * 0.02);
+            group.children.forEach((child, i) => {
+                if (child.geometry.type === 'TorusGeometry') {
+                    child.rotation.x = time * (0.05 + i * 0.01);
+                    child.rotation.y = time * (0.03 + i * 0.02);
+                } else {
+                    child.position.z = Math.sin(time + i) * 1;
+                }
             });
         };
     },
-    // Scene 5: Video Wave (Marketing)
+    // Scene 6: Video Wave (Marketing)
     (scene, camera, renderer) => {
         const geo = new THREE.PlaneGeometry(8, 4, 64, 32);
         const mat = new THREE.MeshBasicMaterial({ color: 0xD4AF37, wireframe: true, transparent: true, opacity: 0.2 });
@@ -1059,7 +1373,7 @@ const scenes = [
             pos.needsUpdate = true;
         };
     },
-    // Scene 6: Website DNA (Web Designer)
+    // Scene 7: Website DNA (Web Designer)
     (scene, camera, renderer) => {
         const group = new THREE.Group();
         const mat = new THREE.LineBasicMaterial({ color: 0xD4AF37, transparent: true, opacity: 0.3 });
@@ -1075,7 +1389,36 @@ const scenes = [
         scene.add(group);
         return (time) => { group.rotation.y = time * 0.05; };
     },
-    // Scene 7: Consulting Nodes
+    // Scene 8: Hearts/Dating (Match)
+    (scene, camera, renderer) => {
+        const group = new THREE.Group();
+        const heartShape = new THREE.Shape();
+        heartShape.moveTo(0, 0);
+        heartShape.bezierCurveTo(0, -0.3, -0.6, -0.6, -0.6, -0.3);
+        heartShape.bezierCurveTo(-0.6, 0.1, 0, 0.4, 0, 0.8);
+        heartShape.bezierCurveTo(0, 0.4, 0.6, 0.1, 0.6, -0.3);
+        heartShape.bezierCurveTo(0.6, -0.6, 0, -0.3, 0, 0);
+        
+        const heartGeo = new THREE.ExtrudeGeometry(heartShape, { depth: 0.1, bevelEnabled: false });
+        const heartMat = new THREE.MeshBasicMaterial({ color: 0xD4AF37, transparent: true, opacity: 0.3, wireframe: true });
+        
+        for (let i = 0; i < 15; i++) {
+            const heart = new THREE.Mesh(heartGeo, heartMat);
+            heart.position.set((Math.random()-0.5)*6, (Math.random()-0.5)*4, (Math.random()-0.5)*3);
+            heart.scale.setScalar(0.3 + Math.random() * 0.4);
+            heart.userData = { speed: 0.5 + Math.random(), offset: Math.random() * Math.PI * 2 };
+            group.add(heart);
+        }
+        scene.add(group);
+        return (time) => {
+            group.children.forEach((heart) => {
+                heart.position.y += Math.sin(time * heart.userData.speed + heart.userData.offset) * 0.002;
+                heart.rotation.y = time * 0.3;
+                heart.material.opacity = 0.2 + Math.sin(time * 2 + heart.userData.offset) * 0.1;
+            });
+        };
+    },
+    // Scene 9: Consulting Nodes
     (scene, camera, renderer) => {
         const group = new THREE.Group();
         const geo = new THREE.SphereGeometry(0.08, 8, 8);
@@ -1087,7 +1430,6 @@ const scenes = [
             group.add(mesh);
             nodes.push(mesh);
         }
-        // Connections
         const lineMat = new THREE.LineBasicMaterial({ color: 0xD4AF37, transparent: true, opacity: 0.15 });
         for (let i = 0; i < nodes.length; i++) {
             for (let j = i+1; j < nodes.length; j++) {
@@ -1105,7 +1447,67 @@ const scenes = [
             });
         };
     },
-    // Scene 8: Pipeline Flow (Additional)
+    // Scene 10: Data Streams (Data & Simulation)
+    (scene, camera, renderer) => {
+        const group = new THREE.Group();
+        for (let i = 0; i < 20; i++) {
+            const geo = new THREE.BufferGeometry();
+            const pts = [];
+            for (let j = 0; j < 50; j++) {
+                pts.push((i-10)*0.3, j*0.1-2.5, Math.sin(j*0.2+time)*0.3);
+            }
+            geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(pts), 3));
+            const mat = new THREE.LineBasicMaterial({ 
+                color: new THREE.Color().setHSL(0.12 + i*0.02, 0.8, 0.5), 
+                transparent: true, 
+                opacity: 0.4 
+            });
+            group.add(new THREE.Line(geo, mat));
+        }
+        scene.add(group);
+        return (time) => {
+            group.children.forEach((line, i) => {
+                const pos = line.geometry.attributes.position;
+                for (let j = 0; j < pos.count; j++) {
+                    pos.setZ(j, Math.sin(j*0.2 + time * (1 + i*0.1)) * 0.3);
+                }
+                pos.needsUpdate = true;
+            });
+        };
+    },
+    // Scene 11: Server Racks (Infrastructure)
+    (scene, camera, renderer) => {
+        const group = new THREE.Group();
+        const rackGeo = new THREE.BoxGeometry(0.3, 2, 0.3);
+        const rackMat = new THREE.MeshBasicMaterial({ color: 0x333333, transparent: true, opacity: 0.5, wireframe: true });
+        const lightMat = new THREE.MeshBasicMaterial({ color: 0xFFD700, transparent: true, opacity: 0.8 });
+        
+        for (let x = -3; x <= 3; x++) {
+            for (let z = -2; z <= 2; z++) {
+                const rack = new THREE.Mesh(rackGeo, rackMat);
+                rack.position.set(x * 0.8, 0, z * 0.8);
+                group.add(rack);
+                
+                // Server lights
+                for (let y = -0.8; y <= 0.8; y += 0.2) {
+                    const light = new THREE.Mesh(new THREE.SphereGeometry(0.02, 6, 6), lightMat);
+                    light.position.set(x * 0.8 + 0.15, y, z * 0.8 + 0.15);
+                    light.userData = { offset: Math.random() * Math.PI * 2, speed: 2 + Math.random() * 3 };
+                    group.add(light);
+                }
+            }
+        }
+        scene.add(group);
+        return (time) => {
+            group.children.forEach((child) => {
+                if (child.userData.offset !== undefined) {
+                    child.material.opacity = 0.3 + Math.sin(time * child.userData.speed + child.userData.offset) * 0.5;
+                }
+            });
+            group.rotation.y = time * 0.01;
+        };
+    },
+    // Scene 12: Pipeline Flow (Additional)
     (scene, camera, renderer) => {
         const group = new THREE.Group();
         const mat = new THREE.MeshBasicMaterial({ color: 0xD4AF37, transparent: true, opacity: 0.3 });
@@ -1123,21 +1525,42 @@ const scenes = [
             });
         };
     },
-    // Scene 9: Golden Core (Contact)
+    // Scene 13: Golden Core (Contact)
     (scene, camera, renderer) => {
+        const group = new THREE.Group();
+        
         const geo = new THREE.OctahedronGeometry(1, 0);
         const mat = new THREE.MeshBasicMaterial({ color: 0xD4AF37, wireframe: true, transparent: true, opacity: 0.3 });
         const mesh = new THREE.Mesh(geo, mat);
-        scene.add(mesh);
+        group.add(mesh);
+        
         const innerGeo = new THREE.OctahedronGeometry(0.5, 0);
         const innerMat = new THREE.MeshBasicMaterial({ color: 0xF4E4BC, wireframe: true, transparent: true, opacity: 0.5 });
         const inner = new THREE.Mesh(innerGeo, innerMat);
-        scene.add(inner);
+        group.add(inner);
+        
+        // Add orbiting particles
+        const particleGeo = new THREE.BufferGeometry();
+        const pCount = 200;
+        const pPos = new Float32Array(pCount * 3);
+        for (let i = 0; i < pCount; i++) {
+            const angle = (i / pCount) * Math.PI * 2;
+            pPos[i*3] = Math.cos(angle) * 2;
+            pPos[i*3+1] = Math.sin(angle) * 2;
+            pPos[i*3+2] = (Math.random() - 0.5) * 0.5;
+        }
+        particleGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+        const particleMat = new THREE.PointsMaterial({ color: 0xFFD700, size: 0.03, transparent: true, opacity: 0.6 });
+        const particles = new THREE.Points(particleGeo, particleMat);
+        group.add(particles);
+        
+        scene.add(group);
         return (time) => {
             mesh.rotation.x = time * 0.3;
             mesh.rotation.y = time * 0.2;
             inner.rotation.x = -time * 0.5;
             inner.rotation.y = -time * 0.3;
+            particles.rotation.z = time * 0.1;
         };
     }
 ];
@@ -1152,7 +1575,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 container.appendChild(renderer.domElement);
 
-// Build all scenes but only show current
+// Build all scene updaters
 const sceneUpdaters = scenes.map(fn => fn(scene, camera, renderer));
 let currentScene = 0;
 
@@ -1167,7 +1590,6 @@ animate();
 // === HORIZONTAL SCROLL ===
 const wrapper = document.getElementById('horizontalWrapper');
 const panels = document.querySelectorAll('.panel');
-const totalWidth = wrapper.scrollWidth - window.innerWidth;
 
 // GSAP horizontal scroll
 gsap.registerPlugin(ScrollTrigger);
@@ -1181,14 +1603,11 @@ const scrollTween = gsap.to(wrapper, {
         scrub: 1,
         end: () => '+=' + (wrapper.scrollWidth - window.innerWidth),
         onUpdate: (self) => {
-            // Progress bar
             document.getElementById('progressBar').style.width = (self.progress * 100) + '%';
-            // Update nav dots
             const activeIdx = Math.round(self.progress * (panels.length - 1));
             document.querySelectorAll('.nav-dot').forEach((dot, i) => {
                 dot.classList.toggle('active', i === activeIdx);
             });
-            // Update 3D scene
             if (activeIdx !== currentScene) {
                 currentScene = activeIdx;
             }
@@ -1198,14 +1617,12 @@ const scrollTween = gsap.to(wrapper, {
 
 // === NAV DOTS ===
 const navDots = document.getElementById('navDots');
-const labels = ['Intro', 'Medical', '305business', 'AIDid', 'Zero-G', 'Marketing', 'Websites', 'Consulting', 'Pipeline', 'Contact'];
+const labels = ['Intro', 'Medical', 'Robotics', '305business', 'AIDid', 'Zero-G', 'Marketing', 'Websites', 'Match AI', 'Consulting', 'Data', 'Infra', 'Pipeline', 'Contact'];
 panels.forEach((_, i) => {
     const dot = document.createElement('div');
     dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
     dot.dataset.label = labels[i];
     dot.addEventListener('click', () => {
-        const target = (wrapper.scrollWidth - window.innerWidth) * (i / (panels.length - 1));
-        // Scroll to position
         const st = scrollTween.scrollTrigger;
         st.scroll(st.start + (st.end - st.start) * (i / (panels.length - 1)));
     });
@@ -1214,7 +1631,7 @@ panels.forEach((_, i) => {
 
 // === ENTRANCE ANIMATIONS ===
 panels.forEach((panel) => {
-    const els = panel.querySelectorAll('.hero-title, .hero-subtitle, .section-title, .section-body, .section-label, .feature-grid li, .card, .cta-group, .metric-row, .contact-links, .status-row');
+    const els = panel.querySelectorAll('.hero-title, .hero-subtitle, .section-title, .section-body, .section-label, .feature-grid li, .card, .cta-group, .metric-row, .contact-links, .status-row, .partner-banner');
     gsap.from(els, {
         y: 50,
         opacity: 0,
@@ -1238,7 +1655,7 @@ window.addEventListener('resize', () => {
     ScrollTrigger.refresh();
 });
 
-// === HIDE SCROLL HINT ON SCROLL ===
+// === HIDE SCROLL HINT ===
 let hintHidden = false;
 window.addEventListener('wheel', () => {
     if (!hintHidden) {
