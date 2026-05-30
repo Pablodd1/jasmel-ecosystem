@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jasmel Acosta — AI Ecosystem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #AA8C2C;
+            --gold-dim: rgba(212, 175, 55, 0.15);
+            --black: #0A0A0A;
+            --black-light: #111111;
+            --black-lighter: #1A1A1A;
+            --white: #FFFFFF;
+            --gray: #888888;
+            --gray-dark: #444444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            overflow: hidden;
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 20px; height: 20px;
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s, background 0.2s;
+            mix-blend-mode: difference;
+        }
+        .cursor-follower {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.3s ease-out;
+        }
+        .cursor.hover { transform: scale(1.5); background: rgba(212, 175, 55, 0.1); }
+
+        /* Three.js Canvas */
+        #canvas-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        canvas { display: block; }
+
+        /* Horizontal Scroll */
+        .horizontal-wrapper {
+            display: flex;
+            width: fit-content;
+            height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        .panel {
+            width: 100vw;
+            height: 100vh;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 0 5vw;
+            overflow: hidden;
+        }
+
+        .panel-content {
+            max-width: 1200px;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Typography */
+        h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 400; line-height: 1.1; }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 6rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 1.5vw, 1.3rem);
+            font-weight: 300;
+            color: var(--gray);
+            max-width: 700px;
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+        }
+
+        .section-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.35em;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 4.5rem);
+            font-weight: 400;
+            color: var(--white);
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .section-body {
+            font-size: 1rem;
+            font-weight: 300;
+            color: var(--gray);
+            line-height: 1.8;
+            max-width: 600px;
+        }
+
+        .section-body strong { color: var(--gold-light); font-weight: 500; }
+
+        /* Status Tags */
+        .status-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .status-tag {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            border: 1px solid;
+        }
+        .tag-ready { border-color: #22c55e; color: #22c55e; }
+        .tag-funding { border-color: var(--gold); color: var(--gold); }
+        .tag-active { border-color: #3b82f6; color: #3b82f6; }
+        .tag-sell { border-color: #f59e0b; color: #f59e0b; }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem 2rem;
+            margin-top: 1.5rem;
+            list-style: none;
+        }
+        .feature-grid li {
+            font-size: 0.85rem;
+            color: var(--gray);
+            padding-left: 1.2rem;
+            position: relative;
+            line-height: 1.6;
+        }
+        .feature-grid li::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0.5rem;
+            width: 5px; height: 5px;
+            background: var(--gold);
+            border-radius: 50%;
+        }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .card {
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            padding: 1.8rem;
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+        }
+        .card:hover {
+            border-color: var(--gold);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px rgba(212, 175, 55, 0.08);
+        }
+        .card h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--gold);
+            margin-bottom: 0.6rem;
+        }
+        .card p {
+            font-size: 0.8rem;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* CTA */
+        .cta-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2.5rem;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 0.9rem 2rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            border: 1px solid var(--gold);
+            background: transparent;
+            color: var(--gold);
+            cursor: none;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: var(--gold);
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+        .btn:hover { color: var(--black); }
+        .btn:hover::before { left: 0; }
+        .btn-primary {
+            background: var(--gold);
+            color: var(--black);
+            border-color: var(--gold);
+        }
+        .btn-primary::before { background: var(--black); }
+        .btn-primary:hover { color: var(--gold); }
+
+        /* Nav Dots */
+        .nav-dots {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .nav-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            border: 1px solid var(--gray-dark);
+            background: transparent;
+            cursor: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .nav-dot.active {
+            background: var(--gold);
+            border-color: var(--gold);
+            transform: scale(1.3);
+        }
+        .nav-dot::after {
+            content: attr(data-label);
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--gray);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .nav-dot:hover::after { opacity: 1; }
+
+        /* Progress */
+        .progress-bar {
+            position: fixed;
+            bottom: 0; left: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light));
+            z-index: 100;
+            width: 0%;
+        }
+
+        /* Scroll Hint */
+        .scroll-hint {
+            position: fixed;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            animation: fadeOut 1s ease 5s forwards;
+        }
+        .scroll-hint span {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--gray);
+        }
+        .scroll-line {
+            width: 40px; height: 1px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+            animation: scrollPulse 2s ease infinite;
+        }
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleX(0.5); }
+            50% { opacity: 1; transform: scaleX(1); }
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; pointer-events: none; }
+        }
+
+        /* Grid BG */
+        .grid-bg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image:
+                linear-gradient(rgba(212, 175, 55, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 175, 55, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+        }
+
+        /* Two Column */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        /* Loading */
+        .loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--black);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 2rem;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+        .loader.hidden { opacity: 0; visibility: hidden; }
+        .loader-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--gold);
+            letter-spacing: 0.2em;
+        }
+        .loader-bar {
+            width: 200px; height: 1px;
+            background: var(--black-lighter);
+            position: relative;
+            overflow: hidden;
+        }
+        .loader-bar::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            height: 100%;
+            width: 0%;
+            background: var(--gold);
+            animation: loadProgress 2s ease forwards;
+        }
+        @keyframes loadProgress { to { width: 100%; } }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            html, body { overflow-y: auto; overflow-x: hidden; cursor: auto; }
+            .horizontal-wrapper { flex-direction: column; width: 100%; height: auto; }
+            .panel { width: 100%; height: auto; min-height: 100vh; padding: 4rem 2rem; }
+            .two-col { grid-template-columns: 1fr; gap: 2rem; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .card-grid { grid-template-columns: 1fr; }
+            .nav-dots, .cursor, .cursor-follower { display: none; }
+            .scroll-hint { display: none; }
+        }
+
+        /* Revenue / Metric display */
+        .metric-row {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        .metric {
+            text-align: left;
+        }
+        .metric-value {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            color: var(--gold);
+            line-height: 1;
+        }
+        .metric-label {
+            font-size: 0.7rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-top: 0.3rem;
+        }
+
+        /* Contact links */
+        .contact-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        .contact-link:hover { color: var(--gold); }
+        .contact-link .icon {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: var(--gold);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Loader -->
+<div class="loader" id="loader">
+    <div class="loader-text">Jasmel Acosta</div>
+    <div class="loader-bar"></div>
+</div>
+
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursor-follower"></div>
+
+<!-- 3D BG -->
+<div id="canvas-container"></div>
+
+<!-- Nav -->
+<div class="nav-dots" id="navDots"></div>
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Scroll Hint -->
+<div class="scroll-hint" id="scrollHint">
+    <span>Scroll Right to Explore</span>
+    <div class="scroll-line"></div>
+</div>
+
+<!-- CONTENT — 10 PANELS -->
+<div class="horizontal-wrapper" id="horizontalWrapper">
+
+    <!-- PANEL 1: HERO — AI ECOSYSTEM -->
+    <section class="panel" data-section="0">
+        <div class="grid-bg"></div>
+        <div class="panel-content">
+            <div class="section-label">AI Solutions Architect — Miami, FL</div>
+            <h1 class="hero-title">Jasmel Acosta</h1>
+            <p class="hero-subtitle">
+                I don't consult. I build. Nine platforms spanning healthcare AI, legal tech, 
+                business intelligence, 3D rendering, market forecasting, and automated marketing — 
+                all designed, coded, and shipped from Miami.
+            </p>
+            <div class="metric-row">
+                <div class="metric">
+                    <div class="metric-value">9</div>
+                    <div class="metric-label">Platforms</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">5K</div>
+                    <div class="metric-label">AI Personas</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">$45K</div>
+                    <div class="metric-label">Investor Ready</div>
+                </div>
+            </div>
+            <div class="cta-group">
+                <a href="#contact" class="btn btn-primary">Partner With Me</a>
+                <a href="#invest" class="btn">Invest</a>
+                <a href="#acquire" class="btn">Acquire a Platform</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- PANEL 2: AI MEDICAL SCRIBE -->
+    <section class="panel" data-section="1">
+        <div class="grid-bg"></div>
+        <div class="panel-content">
+            <div class="two-col">
+                <div>
+                    <div class="section-label">Healthcare AI — Voice-Powered EHR</div>
+                    <h2 class="section-title">AI Medical Scribe</h2>
+                    <div class="status-row">
+                        <span class="status-tag tag-active">Active Development</span>
+                        <span class="status-tag tag-funding">$45K Investor Buyout</span>
+                    </div>
+                    <p class="section-body">
+                        <strong>Voice-first EHR.</strong> No typing. No clicking. Just speak.
+                        Agents correcting agents — multi-layer hallucination reduction.
+                        ICD-10 extraction, medication databases, vision-based symptomology.
+                    </p>
+                    <ul class="feature-grid">
+                        <li>3D muscle-skeletal assessment</li>
+                        <li>Homer exercises (billable to insurance)</li>
+                        <li>Blood pressure / heart rate / weight monitoring</li>
+                        <li>Fall detection via cheap Wi-Fi cameras</li>
+                        <li>Avatar exercise coach + form correction</li>
+                        <li>X-ray & MRI reader + lab interpreter</li>
+                        <li>Red flagging: diseases, missing records, gaps</li>
+                        <li>All-scope practice: internal medicine, surgery, psych</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="card-grid">
+                        <div class="card">
+                            <h4>Voice Command</h4>
+                            <p>Hands-free note creation. Speak naturally. AI structures, codes, and files.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Vision AI</h4>
+                            <p>Camera-based symptom detection. Skin, posture, movement analysis.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Agent Stack</h4>
+                            <p>Agents reviewing agents. Self-correcting pipeline. Near-zero hallucination.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PANEL 3: 305BUSINESS.LLC -->
+    <section class="panel" data-section="2">
+        <div class="grid-bg"></div>
+        <div class="panel-content">
+            <div class="two-col">
+                <div>
+                    <div class="section-label">Business Marketplace — Miami</div>
+                    <h2 class="section-title">305business.llc</h2>
+                    <div class="status-row">
+                        <span class="status-tag tag-ready">Ready to Launch</span>
+                        <span class="status-tag tag-funding">$5K/Subscription</span>
+                    </div>
+                    <p class="section-body">
+                        <strong>Buy real businesses. Not ideas.</strong> Miami and Miami Beach focused.
+                        Working companies with revenue, staff, and history — listed by owners ready to sell.
+                        No startup pitches. No "invest in my dream." Just real deals.
+                    </p>
+                    <ul class="feature-grid">
+                        <li>Broker-ready platform</li>
+                        <li>Verified financials & operations</li>
+                        <li>Local Miami market focus</li>
+                        <li>Subscription-based listings</li>
+                        <li>Due diligence workflows</li>
+                        <li>Direct owner-to-buyer matching</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="card-grid" style="grid-template-columns: 1fr;">
+                        <div class="card" style="padding: 2.5rem;">
+                            <h4 style="font-size: 1.3rem;">The Problem</h4>
+                            <p>Most "business for sale" sites are scams, outdated, or full of fake listings. 305business fixes that with verified, local, working companies.</p>
+                            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(212,175,55,0.1);">
+                                <h4 style="font-size: 1.3rem;">The Model</h4>
+                                <p>Sellers pay to list. Buyers browse free. Broker integrations for closing. Miami first, then expand.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PANEL 4: AIDID — AI RENDERING -->
+    <section class="panel" data-section="3">
+        <div class="grid-bg"></div>
+        <div class="panel-content">
+            <div class="two-col">
+                <div>
+                    <div class="section-label">AI Rendering — Real-Time Visualization</div>
+                    <h2 class="section-title">AIDid</h2>
+                    <div class="status-row">
+                        <span class="status-tag tag-active">Active</span>
+                        <span class="status-tag tag-sell">Sellable Product</span>
+                    </div>
+                    <p class="section-body">
+                        <strong>Render anything on anything.</strong> Take a photo. AI analyzes structure, lighting, perspective — then renders your product, paint, wrap, or design directly onto the real image.
+                    </p>
+                    <ul class="feature-grid">
+                        <li>Car wraps & color changes</li>
+                        <li>Interior & exterior paint</li>
+                        <li>Furniture placement & styling</li>
+                        <li>Clothing & bathing suit visualization</li>
+                        <li>Real-body proportions — no generic models</li>
+                        <li>ROI calculator: see before you buy</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="card-grid" style="grid-template-columns: 1fr 1fr;">
+                        <div class="card">
+                            <h4>Real Structure</h4>
+                            <p>Analyzes actual geometry from user photos. Not templates.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Real Lighting</h4>
+                            <p>Matches ambient light, shadows, reflections in the source photo.</p>
+                        </div>
+                        <div class="card" style="grid-column: 1 / -1;">
+                            <h4>Use Case: Car Wrapping</h4>
+                            <p>Customer sends photo of their car. AIDid renders matte black, chrome, or custom vinyl directly on their actual vehicle. See it before you pay $3K.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PANEL 5: ZERO-G FORECAST -->
+    <section class="panel" data-section="4">
+        <div class="grid-bg"></div>
+        <div class="panel-content">
+            <div class="two-col">
+                <div>
+                    <div class="section-label">Market Simulation — 5,000 Persona Engine</div>
+                    <h2 class="section-title">Zero-G Forecast</h2>
+                    <div class="status-row">
+                        <span class="status-tag tag-active">Operational</span>
+                        <span class="status-tag tag-sell">Sellable / Wrapping</span>
+                    </div>
+                    <p class="section-body">
+                        <strong>Simulate the future.</strong> 5,000 AI personas with demographics, behaviors, biases, and socioeconomic profiles. Run 6-month to 5-year forecasts across any industry, market, or investment.
+                    </p>
+                    <ul class="feature-grid">
+                        <li>Cryptocurrency trend forecasting</li>
+                        <li>Real estate market simulation</li>
+                        <li>Employment & labor market shifts</li>
+                        <li>Cultural & educational trend analysis</li>
+                        <li>Investment portfolio stress-testing</li>
+                        <li>Socioeconomic scenario modeling</li>
+                        <li>Policy impact prediction</li>
+                        <li>Competitor entry simulation</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="metric-row" style="margin-bottom: 2rem;">
+                        <div class="metric">
+                            <div class="metric-value">5,000</div>
+                            <div class="metric-label">AI Personas</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">5yr</div>
+                            <div class="metric-label">Max Forecast</div>
+                        </div>
+                    </div>
+                    <div class="card-grid" style="grid-template-columns: 1fr;">
+                        <div class="card">
+                            <h4>How It Works</h4>
+                            <p>Each persona has income, education, location, preferences, risk tolerance. They interact, buy, sell, vote, move. Run 10,000 Monte Carlo simulations. Output: probability distributions for any business decision.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PANEL 6: AI MARKETING CRM -->
+    <section class="panel" data-section="5">
+        <div class="grid-bg"></div>
+        <div class="panel-content">
+            <div class="two-col">
+                <div>
+                    <div class="section-label">Automated Marketing — Faceless Video & Content</div>
+                    <h2 class="section-title">AI Marketing CRM</h2>
+                    <div class="status-row">
+                        <span class="status-tag tag-ready">Ready</span>
+                    </div>
+                    <p class="section-body">
+                        <strong>Post what works. Not what you guess.</strong> AI-generated content pipeline powered by market research and forecast simulations. Faceless avatar videos, auto-scheduled posts, engagement-optimized copy.
+                    </p>
+                    <ul class="feature-grid">
+                        <li>Faceless avatar video generation</li>
+                        <li>Market-research-driven content topics</li>
+                        <li>Forecast-simulation content strategy</li>
+                        <li>Auto-scheduling across platforms</li>
+                        <li>Real-time engagement optimization</li>
+                        <li>A/B test headlines & thumbnails</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="card-grid" style="grid-template-columns: 1fr;">
+                        <div class="card">
+                            <h4>The Loop</h4>
+                            <p><strong>1.</strong> Zero-G Forecast identifies trending topics.<br>
+                            <strong>2.</strong> AI writes scripts based on real data.<br>
+                            <strong>3.</strong> Avatar generates faceless video.<br>
+                            <strong>4.</strong> CRM schedules, posts, measures.<br>
+                            <strong>5.</strong> Results feed back into forecast model.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PANEL 7: AI WEBSITE DESIGNER -->
+    <section class="panel" data-section="6">
+        <div class="grid-bg"></div>
+        <div class="panel-content">
+            <div class="two-col">
+                <div>
+                    <div class="section-label">Luxury Interactive Websites — AI + SEO</div>
+                    <h2 class="section-title">AI Website Designer</h2>
+                    <div class="status-row">
+                        <span class="status-tag tag-active">Active</span>
+                    </div>
+                    <p class="section-body">
+                        <strong>No generic templates.</strong> Every site is custom-coded with AI-assisted design, interactive 3D elements, and self-optimizing SEO. The sites improve themselves based on user behavior.
+                    </p>
+                    <ul class="feature-grid">
+                        <li>Luxury aesthetic (no templates)</li>
+                        <li>Interactive 3D backgrounds</li>
+                        <li>AI-powered SEO auto-optimization</li>
+                        <li>Behavioral analytics integration</li>
+                        <li>Self-adjusting content & layout</li>
+                        <li>Mobile-first responsive design</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="card-grid" style="grid-template-columns: 1fr 1fr;">
+                        <div class="card">
+                            <h4>Anti-Generic</h4>
+                            <p>Most AI site builders pump out the same 12 templates. Ours generates unique layouts per brand.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Self-Learning</h4>
+                            <p>Site tracks visitor behavior and adjusts CTA placement, copy, and design elements automatically.</p>
+                        </div>
+                        <div class="card" style="grid-column: 1 / -1;">
+                            <h4>Live Examples</h4>
+                            <p>AIDynamic.pro · EstateMatch.vercel.app · BizSell-Miami.vercel.app — all built with this system.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PANEL 8: AI CONSULTING -->
+    <section class="panel" data-section="7">
+        <div class="grid-bg"></div>
+        <div class="panel-content">
+            <div class="two-col">
+                <div>
+                    <div class="section-label">Company Audits — White-Label Apps — Staff Training</div>
+                    <h2 class="section-title">AI Consulting</h2>
+                    <div class="status-row">
+                        <span class="status-tag tag-active">Active</span>
+                    </div>
+                    <p class="section-body">
+                        <strong>Audit. Optimize. Train.</strong> I assess companies, build personalized white-label AI applications, and train staff at every rank to use them. The biggest mistake companies make: buying AI tools but never training the people.
+                    </p>
+                    <ul class="feature-grid">
+                        <li>Full company AI readiness audit</li>
+                        <li>Custom white-label app development</li>
+                        <li>Workflow optimization with AI</li>
+                        <li>Staff training at all levels</li>
+                        <li>ROI tracking & reporting</li>
+                        <li>Ongoing support & iteration</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="card-grid" style="grid-template-columns: 1fr;">
+                        <div class="card">
+                            <h4>The Mistake Every Company Makes</h4>
+                            <p>They buy ChatGPT licenses, give them to staff, and expect magic. Without training, workflow redesign, and custom tools, adoption is 12% and ROI is negative.</p>
+                            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(212,175,55,0.1);">
+                                <p style="font-size: 0.8rem; color: var(--gold-light);"><strong>I fix that.</strong> Custom apps + training + measurable results.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PANEL 9: ADDITIONAL VENTURES -->
+    <section class="panel" data-section="8">
+        <div class="grid-bg"></div>
+        <div class="panel-content">
+            <div class="section-label">Additional Platforms & Opportunities</div>
+            <h2 class="section-title" style="margin-bottom: 2.5rem;">More in the Pipeline</h2>
+            <div class="card-grid" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="card">
+                    <h4>3D Assessment Co</h4>
+                    <p>Medical consultation + 3D body assessment platform. Waiting for funding. <strong style="color:var(--gold)">CTO Role</strong></p>
+                    <span class="status-tag tag-funding" style="margin-top: 1rem; display: inline-block;">Seeking Funds</span>
+                </div>
+                <div class="card">
+                    <h4>Telehealth Platform</h4>
+                    <p>Multi-family housing telehealth solution. Websites and apps built. Ready for launch. <strong style="color:var(--gold)">Launch-Pending</strong></p>
+                    <span class="status-tag tag-funding" style="margin-top: 1rem; display: inline-block;">Seeking Funds</span>
+                </div>
+                <div class="card">
+                    <h4>Legal AI (DealFlow)</h4>
+                    <p>Immigration attorney AI. Voice-based client interaction. Lie detection via facial analysis + case database. <strong style="color:var(--gold)">Operational</strong></p>
+                    <span class="status-tag tag-active" style="margin-top: 1rem; display: inline-block;">Active</span>
+                </div>
+                <div class="card">
+                    <h4>Estate Match</h4>
+                    <p>Real estate "tinder" — swipe through properties. AI-matched to buyer preferences and budget. <strong style="color:var(--gold)">Live</strong></p>
+                    <span class="status-tag tag-ready" style="margin-top: 1rem; display: inline-block;">Live</span>
+                </div>
+                <div class="card">
+                    <h4>BizSell Miami</h4>
+                    <p>Enhanced business marketplace video platform. Faceless marketing, agentic SEO. <strong style="color:var(--gold)">Live</strong></p>
+                    <span class="status-tag tag-ready" style="margin-top: 1rem; display: inline-block;">Live</span>
+                </div>
+                <div class="card">
+                    <h4>CEDEXX</h4>
+                    <p>Health tech platform. $30K investment needed. 23 days to launch window. <strong style="color:var(--gold)">95% Ready</strong></p>
+                    <span class="status-tag tag-funding" style="margin-top: 1rem; display: inline-block;">$30K Needed</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PANEL 10: CONTACT -->
+    <section class="panel" data-section="9">
+        <div class="grid-bg"></div>
+        <div class="panel-content">
+            <div class="two-col">
+                <div>
+                    <div class="section-label">Let's Build Something</div>
+                    <h2 class="section-title">Work With Me</h2>
+                    <p class="section-body">
+                        I'm looking for partners, investors, and buyers for the platforms above.
+                        Some are ready to launch. Some need funding. Some are ready to sell.
+                        If you see something that fits, let's talk.
+                    </p>
+                    <div class="metric-row" style="margin-top: 2rem;">
+                        <div class="metric">
+                            <div class="metric-value">Miami</div>
+                            <div class="metric-label">Based</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">Global</div>
+                            <div class="metric-label">Reach</div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="contact-links">
+                        <a href="mailto:jasmelacosta@gmail.com" class="contact-link">
+                            <div class="icon">@</div>
+                            <span>jasmelacosta@gmail.com</span>
+                        </a>
+                        <a href="https://t.me/JassCTO" class="contact-link">
+                            <div class="icon">T</div>
+                            <span>@JassCTO</span>
+                        </a>
+                        <a href="https://github.com/Pablodd1" class="contact-link">
+                            <div class="icon">G</div>
+                            <span>github.com/Pablodd1</span>
+                        </a>
+                        <a href="https://aidynamic.pro" class="contact-link">
+                            <div class="icon">W</div>
+                            <span>aidynamic.pro</span>
+                        </a>
+                    </div>
+                    <div class="cta-group" style="margin-top: 2rem;">
+                        <a href="mailto:jasmelacosta@gmail.com?subject=Partnership%20Inquiry" class="btn btn-primary">Email Me</a>
+                        <a href="https://t.me/JassCTO" class="btn">Telegram</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+// === LOADER ===
+setTimeout(() => {
+    document.getElementById('loader').classList.add('hidden');
+}, 2200);
+
+// === CUSTOM CURSOR ===
+const cursor = document.getElementById('cursor');
+const follower = document.getElementById('cursor-follower');
+let mouseX = 0, mouseY = 0, fX = 0, fY = 0;
+
+document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cursor.style.left = mouseX - 10 + 'px';
+    cursor.style.top = mouseY - 10 + 'px';
+});
+
+function animateFollower() {
+    fX += (mouseX - fX) * 0.1;
+    fY += (mouseY - fY) * 0.1;
+    follower.style.left = fX - 20 + 'px';
+    follower.style.top = fY - 20 + 'px';
+    requestAnimationFrame(animateFollower);
+}
+animateFollower();
+
+document.querySelectorAll('a, .btn, .card, .nav-dot').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+});
+
+// === THREE.JS SCENES — ONE PER PANEL ===
+const scenes = [
+    // Scene 0: Floating Gold Particles (Hero)
+    (scene, camera, renderer) => {
+        const geo = new THREE.BufferGeometry();
+        const count = 2000;
+        const pos = new Float32Array(count * 3);
+        for (let i = 0; i < count * 3; i++) pos[i] = (Math.random() - 0.5) * 20;
+        geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        const mat = new THREE.PointsMaterial({ color: 0xD4AF37, size: 0.03, transparent: true, opacity: 0.6 });
+        const pts = new THREE.Points(geo, mat);
+        scene.add(pts);
+        return (time) => {
+            pts.rotation.y = time * 0.05;
+            pts.rotation.x = time * 0.02;
+        };
+    },
+    // Scene 1: Neural Network Lines (Medical)
+    (scene, camera, renderer) => {
+        const mat = new THREE.LineBasicMaterial({ color: 0xD4AF37, transparent: true, opacity: 0.3 });
+        const group = new THREE.Group();
+        for (let i = 0; i < 50; i++) {
+            const geo = new THREE.BufferGeometry();
+            const pts = [];
+            for (let j = 0; j < 20; j++) {
+                pts.push((Math.random()-0.5)*6, (Math.random()-0.5)*6, (Math.random()-0.5)*6);
+            }
+            geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(pts), 3));
+            group.add(new THREE.Line(geo, mat));
+        }
+        scene.add(group);
+        return (time) => { group.rotation.y = time * 0.03; group.rotation.z = time * 0.01; };
+    },
+    // Scene 2: Business Grid (305business)
+    (scene, camera, renderer) => {
+        const group = new THREE.Group();
+        const geo = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+        const mat = new THREE.MeshBasicMaterial({ color: 0xD4AF37, transparent: true, opacity: 0.4, wireframe: true });
+        for (let x = -5; x <= 5; x++) {
+            for (let z = -5; z <= 5; z++) {
+                const mesh = new THREE.Mesh(geo, mat);
+                mesh.position.set(x * 0.8, Math.sin(x+z)*0.5, z * 0.8);
+                group.add(mesh);
+            }
+        }
+        scene.add(group);
+        return (time) => {
+            group.children.forEach((m, i) => {
+                m.position.y = Math.sin(time + i * 0.1) * 0.5;
+                m.rotation.y = time * 0.2;
+            });
+        };
+    },
+    // Scene 3: Morphing Sphere (AIDid)
+    (scene, camera, renderer) => {
+        const geo = new THREE.IcosahedronGeometry(1.5, 4);
+        const mat = new THREE.MeshBasicMaterial({ color: 0xD4AF37, wireframe: true, transparent: true, opacity: 0.25 });
+        const mesh = new THREE.Mesh(geo, mat);
+        scene.add(mesh);
+        const pos = geo.attributes.position;
+        const orig = pos.array.slice();
+        return (time) => {
+            for (let i = 0; i < pos.count; i++) {
+                const x = orig[i*3], y = orig[i*3+1], z = orig[i*3+2];
+                const noise = Math.sin(x*2+time)*Math.cos(y*2+time)*0.2;
+                pos.setXYZ(i, x+noise, y+noise, z+noise);
+            }
+            pos.needsUpdate = true;
+            mesh.rotation.y = time * 0.1;
+        };
+    },
+    // Scene 4: Persona Rings (Zero-G)
+    (scene, camera, renderer) => {
+        const group = new THREE.Group();
+        for (let i = 0; i < 8; i++) {
+            const geo = new THREE.TorusGeometry(1 + i * 0.4, 0.02, 16, 100);
+            const mat = new THREE.MeshBasicMaterial({ color: 0xD4AF37, transparent: true, opacity: 0.3 - i*0.03 });
+            group.add(new THREE.Mesh(geo, mat));
+        }
+        scene.add(group);
+        return (time) => {
+            group.children.forEach((ring, i) => {
+                ring.rotation.x = time * (0.05 + i * 0.01);
+                ring.rotation.y = time * (0.03 + i * 0.02);
+            });
+        };
+    },
+    // Scene 5: Video Wave (Marketing)
+    (scene, camera, renderer) => {
+        const geo = new THREE.PlaneGeometry(8, 4, 64, 32);
+        const mat = new THREE.MeshBasicMaterial({ color: 0xD4AF37, wireframe: true, transparent: true, opacity: 0.2 });
+        const mesh = new THREE.Mesh(geo, mat);
+        scene.add(mesh);
+        const pos = geo.attributes.position;
+        return (time) => {
+            for (let i = 0; i < pos.count; i++) {
+                const x = pos.getX(i), y = pos.getY(i);
+                pos.setZ(i, Math.sin(x*2+time)*Math.cos(y+time)*0.3);
+            }
+            pos.needsUpdate = true;
+        };
+    },
+    // Scene 6: Website DNA (Web Designer)
+    (scene, camera, renderer) => {
+        const group = new THREE.Group();
+        const mat = new THREE.LineBasicMaterial({ color: 0xD4AF37, transparent: true, opacity: 0.3 });
+        for (let i = 0; i < 30; i++) {
+            const geo = new THREE.BufferGeometry();
+            const pts = [];
+            for (let j = 0; j < 10; j++) {
+                pts.push(Math.cos(j*0.5+i)*2, Math.sin(j*0.5+i)*2, j*0.3-1.5);
+            }
+            geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(pts), 3));
+            group.add(new THREE.Line(geo, mat));
+        }
+        scene.add(group);
+        return (time) => { group.rotation.y = time * 0.05; };
+    },
+    // Scene 7: Consulting Nodes
+    (scene, camera, renderer) => {
+        const group = new THREE.Group();
+        const geo = new THREE.SphereGeometry(0.08, 8, 8);
+        const mat = new THREE.MeshBasicMaterial({ color: 0xD4AF37, transparent: true, opacity: 0.6 });
+        const nodes = [];
+        for (let i = 0; i < 40; i++) {
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.position.set((Math.random()-0.5)*5, (Math.random()-0.5)*3, (Math.random()-0.5)*3);
+            group.add(mesh);
+            nodes.push(mesh);
+        }
+        // Connections
+        const lineMat = new THREE.LineBasicMaterial({ color: 0xD4AF37, transparent: true, opacity: 0.15 });
+        for (let i = 0; i < nodes.length; i++) {
+            for (let j = i+1; j < nodes.length; j++) {
+                if (nodes[i].position.distanceTo(nodes[j].position) < 1.5) {
+                    const lineGeo = new THREE.BufferGeometry().setFromPoints([nodes[i].position, nodes[j].position]);
+                    group.add(new THREE.Line(lineGeo, lineMat));
+                }
+            }
+        }
+        scene.add(group);
+        return (time) => {
+            group.rotation.y = time * 0.02;
+            nodes.forEach((n, i) => {
+                n.position.y += Math.sin(time + i) * 0.002;
+            });
+        };
+    },
+    // Scene 8: Pipeline Flow (Additional)
+    (scene, camera, renderer) => {
+        const group = new THREE.Group();
+        const mat = new THREE.MeshBasicMaterial({ color: 0xD4AF37, transparent: true, opacity: 0.3 });
+        for (let i = 0; i < 20; i++) {
+            const geo = new THREE.CylinderGeometry(0.05, 0.05, 3, 8);
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.position.set((i-10)*0.4, Math.sin(i*0.5)*0.5, 0);
+            mesh.rotation.z = Math.PI/2;
+            group.add(mesh);
+        }
+        scene.add(group);
+        return (time) => {
+            group.children.forEach((pipe, i) => {
+                pipe.position.y = Math.sin(time + i*0.3) * 0.5;
+            });
+        };
+    },
+    // Scene 9: Golden Core (Contact)
+    (scene, camera, renderer) => {
+        const geo = new THREE.OctahedronGeometry(1, 0);
+        const mat = new THREE.MeshBasicMaterial({ color: 0xD4AF37, wireframe: true, transparent: true, opacity: 0.3 });
+        const mesh = new THREE.Mesh(geo, mat);
+        scene.add(mesh);
+        const innerGeo = new THREE.OctahedronGeometry(0.5, 0);
+        const innerMat = new THREE.MeshBasicMaterial({ color: 0xF4E4BC, wireframe: true, transparent: true, opacity: 0.5 });
+        const inner = new THREE.Mesh(innerGeo, innerMat);
+        scene.add(inner);
+        return (time) => {
+            mesh.rotation.x = time * 0.3;
+            mesh.rotation.y = time * 0.2;
+            inner.rotation.x = -time * 0.5;
+            inner.rotation.y = -time * 0.3;
+        };
+    }
+];
+
+// === INIT THREE.JS ===
+const container = document.getElementById('canvas-container');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 5;
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+container.appendChild(renderer.domElement);
+
+// Build all scenes but only show current
+const sceneUpdaters = scenes.map(fn => fn(scene, camera, renderer));
+let currentScene = 0;
+
+function animate() {
+    requestAnimationFrame(animate);
+    const time = Date.now() * 0.001;
+    if (sceneUpdaters[currentScene]) sceneUpdaters[currentScene](time);
+    renderer.render(scene, camera);
+}
+animate();
+
+// === HORIZONTAL SCROLL ===
+const wrapper = document.getElementById('horizontalWrapper');
+const panels = document.querySelectorAll('.panel');
+const totalWidth = wrapper.scrollWidth - window.innerWidth;
+
+// GSAP horizontal scroll
+gsap.registerPlugin(ScrollTrigger);
+
+const scrollTween = gsap.to(wrapper, {
+    x: () => -(wrapper.scrollWidth - window.innerWidth),
+    ease: 'none',
+    scrollTrigger: {
+        trigger: wrapper,
+        pin: true,
+        scrub: 1,
+        end: () => '+=' + (wrapper.scrollWidth - window.innerWidth),
+        onUpdate: (self) => {
+            // Progress bar
+            document.getElementById('progressBar').style.width = (self.progress * 100) + '%';
+            // Update nav dots
+            const activeIdx = Math.round(self.progress * (panels.length - 1));
+            document.querySelectorAll('.nav-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === activeIdx);
+            });
+            // Update 3D scene
+            if (activeIdx !== currentScene) {
+                currentScene = activeIdx;
+            }
+        }
+    }
+});
+
+// === NAV DOTS ===
+const navDots = document.getElementById('navDots');
+const labels = ['Intro', 'Medical', '305business', 'AIDid', 'Zero-G', 'Marketing', 'Websites', 'Consulting', 'Pipeline', 'Contact'];
+panels.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    dot.dataset.label = labels[i];
+    dot.addEventListener('click', () => {
+        const target = (wrapper.scrollWidth - window.innerWidth) * (i / (panels.length - 1));
+        // Scroll to position
+        const st = scrollTween.scrollTrigger;
+        st.scroll(st.start + (st.end - st.start) * (i / (panels.length - 1)));
+    });
+    navDots.appendChild(dot);
+});
+
+// === ENTRANCE ANIMATIONS ===
+panels.forEach((panel) => {
+    const els = panel.querySelectorAll('.hero-title, .hero-subtitle, .section-title, .section-body, .section-label, .feature-grid li, .card, .cta-group, .metric-row, .contact-links, .status-row');
+    gsap.from(els, {
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.08,
+        ease: 'power3.out',
+        scrollTrigger: {
+            trigger: panel,
+            containerAnimation: scrollTween,
+            start: 'left 80%',
+            toggleActions: 'play none none reverse'
+        }
+    });
+});
+
+// === RESIZE ===
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    ScrollTrigger.refresh();
+});
+
+// === HIDE SCROLL HINT ON SCROLL ===
+let hintHidden = false;
+window.addEventListener('wheel', () => {
+    if (!hintHidden) {
+        document.getElementById('scrollHint').style.opacity = '0';
+        hintHidden = true;
+    }
+}, { once: true });
+</script>
+
+</body>
+</html>
